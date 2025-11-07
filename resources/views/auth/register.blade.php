@@ -2,39 +2,85 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Registrasi</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Healya Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .register-card {
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        .clinic-title {
+            color: #007bff;
+            font-weight: 700;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <form method="POST" action="{{ route('register') }}" class="bg-white p-6 rounded shadow-md w-96">
-        @csrf
-        <h2 class="text-xl font-bold mb-4 text-center">Registrasi</h2>
+<body>
+    <div class="register-card bg-white">
+        <div class="text-center mb-4">
+            <i class="fas fa-user-plus fa-3x text-primary mb-2"></i>
+            <h3 class="clinic-title mb-0">Daftar Akun Admin</h3>
+            <p class="text-muted">Untuk mengakses Panel Pengelolaan</p>
+        </div>
 
-        <select name="role" class="w-full mb-3 px-3 py-2 border rounded" required>
-            <option value="">Pilih Role</option>
-            <option value="pasien">Pasien</option>
-            <option value="admin">Admin Klinik</option>
-        </select>
+        <form method="POST" action="{{ route('register.post') }}">
+            @csrf
 
-        <input type="email" name="email" placeholder="Email" class="w-full mb-3 px-3 py-2 border rounded" required>
-        <input type="password" name="password" placeholder="Password" class="w-full mb-3 px-3 py-2 border rounded" required>
+            <div class="mb-3">
+                <label for="name" class="form-label">Nama Lengkap</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-signature"></i></span>
+                    <input type="text" class="form-control" id="name" name="name" required autofocus>
+                </div>
+            </div>
 
-        <!-- Field untuk Pasien -->
-        <input type="text" name="nik" placeholder="NIK" class="w-full mb-3 px-3 py-2 border rounded">
-        <input type="text" name="nama_pasien" placeholder="Nama Pasien" class="w-full mb-3 px-3 py-2 border rounded">
-        <input type="date" name="tanggal_lahir" class="w-full mb-3 px-3 py-2 border rounded">
-        <input type="text" name="no_telpon" placeholder="No Telpon" class="w-full mb-3 px-3 py-2 border rounded">
-        <input type="text" name="alamat" placeholder="Alamat" class="w-full mb-3 px-3 py-2 border rounded">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+            </div>
 
-        <!-- Field untuk Admin -->
-        <input type="text" name="nama_admin" placeholder="Nama Admin Klinik" class="w-full mb-3 px-3 py-2 border rounded">
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+            </div>
 
-        <button type="submit" class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">Register</button>
+            <div class="mb-4">
+                <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-lock-open"></i></span>
+                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
+                </div>
+            </div>
 
-        @if(session('message'))
-            <p class="mt-4 text-sm text-center text-red-500">{{ session('message') }}</p>
-        @endif
-    </form>
+            <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-success btn-lg">Daftar Sekarang</button>
+            </div>
+            
+            <div class="text-center">
+                <p class="text-muted mb-0">Sudah punya akun? <a href="{{ route('login') }}">Masuk</a></p>
+            </div>
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
