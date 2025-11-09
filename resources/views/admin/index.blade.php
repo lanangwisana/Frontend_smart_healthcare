@@ -62,7 +62,7 @@
 
         <header class="mb-8 pb-3 border-b-4 border-centracare-primary flex justify-between items-center">
             <h3 class="text-3xl font-extrabold text-centracare-dark flex items-center">
-                <i class="fas fa-stethoscope mr-3 text-centracare-primary"></i>
+                <i class="fas fa-hospital mr-3 text-centracare-primary"></i>
                 Dashboard Admin <span class="text-centracare-primary ml-1">SentraCare</span>
             </h3>
 
@@ -105,7 +105,7 @@
                     <div x-show="activeTab === tab.id" class="overflow-x-auto min-w-full">
                         <table
                             class="min-w-full divide-y divide-gray-200 text-sm bg-white rounded-lg overflow-hidden shadow-sm">
-                            <thead class="bg-centracare-light text-centracare-dark uppercase tracking-wider">
+                            <thead class="bg-centracare-primary text-white uppercase tracking-wider">
                                 <tr>
                                     <th class="px-4 py-3 text-left">ID</th>
                                     <th class="px-4 py-3 text-left">Pasien</th>
@@ -149,6 +149,55 @@
         </div>
     </div>
 
+    <div x-show="isCancelReasonModalOpen"
+        class="fixed inset-0 z-50 bg-gray-900 bg-opacity-75 transition-opacity duration-300"
+        x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div x-show="isCancelReasonModalOpen" @click.away="isCancelReasonModalOpen = false"
+                class="bg-white rounded-xl shadow-3xl w-full max-w-md transform transition-all duration-300 overflow-hidden"
+                x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 scale-95"
+                x-transition:enter-end="opacity-100 scale-100" x-transition:leave="ease-in duration-200"
+                x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95">
+
+                <div class="p-5 bg-gray-700 text-white flex justify-between items-center rounded-t-xl">
+                    <h5 class="text-xl font-bold flex items-center">
+                        <i class="fas fa-info-circle mr-2"></i> Catatan Pembatalan
+                    </h5>
+                    <button type="button" @click="isCancelReasonModalOpen = false"
+                        class="text-white hover:text-gray-200">
+                        <i class="fas fa-times text-2xl"></i>
+                    </button>
+                </div>
+
+                <div class="p-6">
+                    <p class="mb-4 text-gray-600">Detail pembatalan janji temu:</p>
+
+                    <div class="space-y-3 text-sm">
+                        <p><span class="font-semibold">ID Janji Temu:</span> <span
+                                x-text="cancelReasonDetail.id"></span></p>
+                        <p><span class="font-semibold">Pasien:</span> <span x-text="cancelReasonDetail.pasien"></span>
+                        </p>
+                        <p><span class="font-semibold">Layanan:</span> <span x-text="cancelReasonDetail.layanan"></span>
+                        </p>
+                        <p><span class="font-semibold">Tanggal Janji Temu:</span> <span
+                                x-text="cancelReasonDetail.tanggal"></span></p>
+                        <div class="mt-4">
+                            <p class="font-semibold mb-1">Alasan Pembatalan:</p>
+                            <p class="p-3 bg-gray-100 rounded-lg italic" x-text="cancelReasonDetail.reason"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-gray-50 border-t flex justify-end">
+                    <button type="button" @click="isCancelReasonModalOpen = false"
+                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div x-show="isPatientDetailModalOpen"
         class="fixed inset-0 z-50 bg-gray-900 bg-opacity-75 transition-opacity duration-300"
         x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
@@ -255,7 +304,7 @@
                             class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100">Batal</button>
                         <button type="submit"
                             class="px-4 py-2 text-sm font-medium text-white bg-centracare-primary rounded-lg hover:bg-centracare-primary/80 transition duration-150">
-                            <i class="fas fa-check-circle mr-2"></i> Jadwalkan (Approve)
+                            <i class="fas fa-check-circle mr-2"></i> Jadwalkan
                         </button>
                     </div>
                 </form>
@@ -1039,7 +1088,7 @@
                         <p class="text-red-500 text-sm mb-4">Anda akan menolak janji temu ID: <span class="font-bold"
                                 x-text="modal.id"></span>. Mohon masukkan alasan penolakan.</p>
                         <input type="hidden" name="appointment_id" :value="modal.id">
-                        <input type="hidden" name="status" value="Ditolak">
+                        <input type="hidden" name="status" value="Dibatalkan">
                         <div class="mb-3">
                             <label for="cancelReason" class="block text-sm font-medium text-gray-700 mb-1">Alasan
                                 Penolakan</label>
@@ -1344,6 +1393,7 @@
         <script>
             // Data Dummy Hasil Rekam Medis (Untuk simulasi "Lihat Hasil")
             const medicalRecords = {
+
                 '4001': {
                     category: 'lab_darah',
                     layanan: 'Tes Darah',
@@ -1466,6 +1516,7 @@
 
             // Data Dummy Detail Pasien (Mapping ke nama pasien)
             const patientDetails = {
+
                 'Joko Purnomo': {
                     dob: '15/03/1985',
                     gender: 'Laki-laki',
@@ -1526,6 +1577,12 @@
                     phone: '0817-8765-4321',
                     address: 'Jalan Baru No. 8, Tangerang'
                 },
+                'Sarah Wijayanti': {
+                    dob: '10/11/1996',
+                    gender: 'Perempuan',
+                    phone: '0817-8765-4321',
+                    address: 'Jalan Baru No. 8, Tangerang'
+                },
             };
 
 
@@ -1533,6 +1590,17 @@
             function appointmentData() {
 
                 const appointmentsData = [
+                    // DATA DITOLAK (Dibatalkan Admin)
+                    {
+                        id: '0003', // ID unik baru
+                        pasien: 'Sarah Wijayanti', // Nama pasien baru
+                        layanan: 'Full Body',
+                        display_layanan: 'Full Body',
+                        category: 'mcu', // Atau kategori lain yang sesuai
+                        status: 'Dibatalkan', // Status 'Ditolak'
+                        tanggal: '14 November 2025',
+                        cancel_reason: 'Dokter cuti.' // Alasan pembatalan
+                    },
                     // DATA MENUNGGU REVIEW
                     {
                         id: '0001',
@@ -1584,7 +1652,7 @@
                     {
                         id: '2001',
                         pasien: 'Siti Aisyah',
-                        layanan: 'Medical Checkup Full Body',
+                        layanan: 'Full Body',
                         display_layanan: 'Full Body',
                         category: 'mcu',
                         status: 'Dijadwalkan',
@@ -1663,7 +1731,7 @@
                     {
                         id: '6001',
                         pasien: 'Siti Aisyah',
-                        layanan: 'Medical Checkup Full Body',
+                        layanan: ' Full Body',
                         display_layanan: 'Full Body',
                         category: 'mcu',
                         status: 'Selesai',
@@ -1682,6 +1750,14 @@
                     isPatientDetailModalOpen: false,
                     isApproveConfirmModalOpen: false,
 
+                    isCancelReasonModalOpen: false, // Tambahkan state baru untuk modal ini
+                    cancelReasonDetail: { // Tambahkan objek baru untuk detail alasan pembatalan
+                        id: '',
+                        pasien: '',
+                        layanan: '',
+                        tanggal: '',
+                        reason: ''
+                    },
                     modal: {
                         id: '',
                         pasien: '',
@@ -1731,19 +1807,28 @@
 
                     // Computed Property untuk memfilter data
                     get filteredAppointments() {
-                        if (this.activeTab === 'all') {
-                            return this.appointments;
+                        let filtered = this.appointments;
+
+                        if (this.activeTab !== 'all') {
+                            filtered = filtered.filter(item => item.category === this.activeTab);
                         }
-                        return this.appointments.filter(item => item.category === this.activeTab);
+
+                        // Urutkan berdasarkan status
+                        const statusOrder = ['Menunggu Review', 'Dijadwalkan', 'Selesai', 'Dibatalkan'];
+                        return filtered.sort((a, b) => {
+                            const statusA = statusOrder.indexOf(a.status);
+                            const statusB = statusOrder.indexOf(b.status);
+                            return statusA - statusB;
+                        });
                     },
 
                     // Menentukan kelas Tailwind untuk status
                     getStatusClasses(status) {
                         if (status.includes('Menunggu Review')) return 'bg-yellow-100 text-yellow-800';
                         if (status.includes('Dijadwalkan'))
-                    return 'bg-centracare-primary/30 text-centracare-dark font-semibold';
-                        if (status.includes('Selesai')) return 'bg-green-100 text-green-800';
-                        if (status.includes('Ditolak')) return 'bg-red-100 text-red-800';
+                            return 'bg-centracare-primary/30 text-centracare-dark font-semibold';
+                        if (status.includes('Selesai')) return 'bg-centracare-secondary/30 text-centracare-dark font-semibold';
+                        if (status.includes('Dibatalkan')) return 'bg-red-100 text-red-800';
                         return 'bg-gray-200 text-gray-700';
                     },
 
@@ -1778,6 +1863,15 @@
                         this.isPatientDetailModalOpen = true;
                     },
 
+                    openCancelReasonModal(item) {
+                        this.cancelReasonDetail.id = item.id;
+                        this.cancelReasonDetail.pasien = item.pasien;
+                        this.cancelReasonDetail.layanan = item.layanan;
+                        this.cancelReasonDetail.tanggal = item.tanggal;
+                        this.cancelReasonDetail.reason = item.cancel_reason ||
+                            'Tidak ada alasan pembatalan.'; // Ambil alasan, atau default
+                        this.isCancelReasonModalOpen = true;
+                    },
                     // Membuka Modal Konfirmasi Approve
                     openApproveConfirmModal(item) {
                         this.modal.id = item.id;
@@ -1853,12 +1947,16 @@
                             // Tombol Approve (Membuka Modal Konfirmasi) dan Tolak (Membuka Modal Pembatalan)
                             return `
                             <button type="button" @click="openApproveConfirmModal(item)" class="text-sm font-medium text-white bg-centracare-primary hover:bg-centracare-primary/80 py-1 px-3 rounded-lg mr-2 transition duration-150">
-                                <i class="fas fa-check-circle mr-1"></i> Approve
+                                <i class="fas fa-check-circle mr-1"></i> Jadwalkan
                             </button>
                             <button type="button" @click="openCancelModal(item)" class="text-sm font-medium text-white bg-red-500 hover:bg-red-600 py-1 px-3 rounded-lg transition duration-150">
-                                <i class="fas fa-times mr-1"></i> Reject
+                                <i class="fas fa-times mr-1"></i> Batalkan
                             </button>
                         `;
+                        }
+
+                        if (item.status.includes('Dibatalkan')) {
+                            return `<button type="button" @click="openCancelReasonModal(item)" class="text-sm font-medium text-white bg-gray-500 hover:bg-gray-600 py-1 px-3 rounded-lg transition duration-150"><i class="fas fa-info-circle mr-1"></i> Lihat Catatan</button>`;
                         }
 
                         if (item.status.includes('Dijadwal')) {
@@ -1870,7 +1968,7 @@
                         `;
                         }
 
-                        if (item.status.includes('Ditolak')) {
+                        if (item.status.includes('Dibatalkan')) {
                             return `<span class="text-xs text-gray-500 italic">Dibatalkan Admin</span>`;
                         }
 
