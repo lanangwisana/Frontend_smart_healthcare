@@ -4,44 +4,48 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes (Akses Langsung ke View Index)
+| ROUTE AUTENTIKASI
 |--------------------------------------------------------------------------
 */
 
-// Hapus middleware untuk debugging view/route.
-// Nanti, Anda perlu menambahkan kembali autentikasi dan role yang benar!
-Route::prefix('clinic')->name('clinic.')->group(function () {
+// 🟢 Halaman Login
+Route::get('/login', function () {
+    return view('admin.login');
+})->name('login');
 
-    // 1. DASHBOARD UTAMA
-    // Route: GET /clinic/dashboard
-    Route::get('/dashboard', function () {
-        // Langsung me-render view index.blade.php
-        return view('index'); 
-    })->name('dashboard');
+// 🟢 Proses Login
+Route::post('/login', function () {
+    // Simulasi proses login
+    return redirect()->route('dashboard')->with('success', 'Selamat datang! Anda berhasil masuk.');
+})->name('login.post');
 
-    // 2. MANAGEMENT APPOINTMENT (Approve/Reject)
-    Route::prefix('appointments')->name('appointments.')->group(function () {
-        
-        // Endpoint untuk update status (Approve atau Tolak)
-        // URL: PUT /clinic/appointments/{appointment}/update-status
-        Route::put('/{appointment}/update-status', function ($appointment) {
-            // Simulasi aksi: redirect kembali
-            return redirect()->route('clinic.dashboard')->with('success', 'Status Appointment ' . $appointment . ' berhasil diperbarui.');
-        })->name('update.status'); 
-    });
+// 🟢 Logout
+Route::post('/logout', function () {
+    return redirect()->route('login')->with('success', 'Anda telah berhasil keluar.');
+})->name('logout');
 
-    // 3. REKAM MEDIS & INPUT HASIL
-    Route::prefix('medical-records')->name('records.')->group(function () {
-        
-        // URL: POST /clinic/medical-records/store
-        Route::post('/store', function () {
-            // Simulasi aksi: redirect kembali
-            return redirect()->route('clinic.dashboard')->with('success', 'Rekam Medis/Hasil berhasil disimpan.');
-        })->name('store');
-        
-        // URL: GET /clinic/medical-records/show/{record}
-        Route::get('/show/{record}', function ($record) {
-             return "Menampilkan detail Rekam Medis dengan ID: " . $record;
-        })->name('show');
-    });
-});
+/*
+|--------------------------------------------------------------------------
+| ROUTE DASHBOARD & FITUR CLINIC
+|--------------------------------------------------------------------------
+*/
+
+// 🏠 Dashboard Utama
+Route::get('/dashboard', function () {
+    return view('admin.index');
+})->name('dashboard');
+
+// 📅 Manajemen Appointment - Update Status
+Route::put('/appointments/{appointment}/update-status', function ($appointment) {
+    return redirect()->route('dashboard')->with('success', 'Status Appointment ' . $appointment . ' berhasil diperbarui.');
+})->name('appointments.update.status');
+
+// 🧾 Rekam Medis - Simpan Data
+Route::post('/medical-records/store', function () {
+    return redirect()->route('dashboard')->with('success', 'Rekam Medis/Hasil berhasil disimpan.');
+})->name('records.store');
+
+// 🧩 Rekam Medis - Tampilkan Detail
+Route::get('/medical-records/show/{record}', function ($record) {
+    return "Menampilkan detail Rekam Medis dengan ID: " . $record;
+})->name('records.show');
