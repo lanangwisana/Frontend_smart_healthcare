@@ -79,7 +79,7 @@
               <td class="py-3 px-6">28 September 2025</td>
               <td class="py-3 px-6">Vaksinasi</td>
               <td class="py-3 px-6">Vaksin HPV</td>
-              <td class="py-3 px-6"><span class="text-yellow-600 font-medium">Menunggu Hasil</span></td>
+              <td class="py-3 px-6"><span class="text-yellow-600 font-medium">Menunggu Review</span></td>
               <td class="py-3 px-6 text-center">
                 <a href="#" class="text-gray-400 cursor-not-allowed">Belum Tersedia</a>
               </td>

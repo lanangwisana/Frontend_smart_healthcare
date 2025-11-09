@@ -11,11 +11,11 @@ Route::get('/index', function () {
 });
 
 // Halaman login & register (frontend only)
-Route::view('/', 'auth.login')->name('login');
-Route::view('/login', 'auth.login');
-Route::view('/register', 'auth.register');
+Route::view('/', 'auth.login-pasien')->name('login');
+Route::view('/login', 'auth.login-pasien');
+Route::view('/register', 'auth.register-pasien');
 
 // Dashboard pasien (nanti bisa ditambah middleware auth kalau backend sudah siap)
-Route::view('/landingpage', 'landingpage');
-Route::view('/booking', 'booking')->name('booking');
-Route::view('/dashboard', 'dashboard')->name('dashboard');
+Route::view('/landingpage-pasien', 'pasien.landingpage-pasien')->name('landingpage.pasien');
+Route::view('/booking-pasien', 'pasien.booking-pasien')->name('booking.pasien');
+Route::view('/pasien/dashboard-pasien', 'pasien.dashboard-pasien')->name('dashboard.pasien');
